@@ -27,6 +27,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
+/**
+ * Shooter subsystem controls the ball shooting mechanism. Balls must be first picked up by the intake and fed into the shooter by the feeder.
+ */
 public class Shooter extends SubsystemBase {
     private static final AngularVelocity kVelocityTolerance = RPM.of(100);
 

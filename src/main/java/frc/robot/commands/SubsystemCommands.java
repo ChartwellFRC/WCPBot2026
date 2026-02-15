@@ -12,6 +12,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
+/**
+ * Various commands that use multiple subsystems at once. Separate instances of this class exist for teleop and autonomous modes.
+ */
 public final class SubsystemCommands {
     private final Swerve swerve;
     private final Intake intake;
@@ -21,9 +24,11 @@ public final class SubsystemCommands {
     private final Hood hood;
     private final Hanger hanger;
 
+    // Controller inputs when in teleop mode, zero when in autonomous mode.
     private final DoubleSupplier forwardInput;
     private final DoubleSupplier leftInput;
 
+    // Constructor for teleop mode
     public SubsystemCommands(
         Swerve swerve,
         Intake intake,
@@ -47,6 +52,7 @@ public final class SubsystemCommands {
         this.leftInput = leftInput;
     }
 
+    // Constructor for autonomous mode
     public SubsystemCommands(
         Swerve swerve,
         Intake intake,
@@ -69,6 +75,12 @@ public final class SubsystemCommands {
         );
     }
 
+    /**
+     * Returns a command that causes the robot to face the hub and shoot balls while moving based on controller input.
+     * In autonomous mode, the robot will just aim and shoot without moving.
+     * 
+     * @return Command to run
+     */
     public Command aimAndShoot() {
         final AimAndDriveCommand aimAndDriveCommand = new AimAndDriveCommand(swerve, forwardInput, leftInput);
         final PrepareShotCommand prepareShotCommand = new PrepareShotCommand(shooter, hood, () -> swerve.getState().Pose);
@@ -81,12 +93,22 @@ public final class SubsystemCommands {
         );
     }
 
+    /**
+     * Returns a command that immediately starts shooting balls.
+     * 
+     * @return Command to run
+     */
     public Command shootManually() {
         return shooter.dashboardSpinUpCommand()
             .andThen(feed())
             .handleInterrupt(() -> shooter.stop());
     }
 
+    /**
+     * Returns a command that feeds balls the robot has already picked up into the shooter.
+     * 
+     * @return Command to run
+     */
     private Command feed() {
         return Commands.sequence(
             Commands.waitSeconds(0.25),

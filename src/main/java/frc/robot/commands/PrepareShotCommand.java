@@ -17,6 +17,11 @@ import frc.robot.Landmarks;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 
+/**
+ * Command that adjusts the shooting trajectory based on the distance to the hub. The speed of the
+ * shooter and the position of the hood both affect the shooting trajectory.
+ * Used by SubsystemCommands.aimAndShoot().
+ */
 public class PrepareShotCommand extends Command {
     private static final InterpolatingTreeMap<Distance, Shot> distanceToShotMap = new InterpolatingTreeMap<>(
         (startValue, endValue, q) -> 

@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
+/**
+ * Feeder subsystem controls the robot's ball feeder, which passes balls from the intake to the shooter.
+ */
 public class Feeder extends SubsystemBase {
     public enum Speed {
         FEED(5000);
@@ -84,6 +87,11 @@ public class Feeder extends SubsystemBase {
         );
     }
 
+    /**
+     * Returns a command that runs the feeder. Used by SubsystemCommands.feed().
+     * 
+     * @return Command to run
+     */
     public Command feedCommand() {
         return startEnd(() -> set(Speed.FEED), () -> setPercentOutput(0));
     }

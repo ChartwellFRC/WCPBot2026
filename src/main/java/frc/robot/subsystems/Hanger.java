@@ -33,6 +33,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
+/**
+ * Hanger subsystem controls the robot's hanger, which latches onto and climbs the tower.
+ */
 public class Hanger extends SubsystemBase {
     public enum Position {
         HOMED(0),
@@ -113,6 +116,11 @@ public class Hanger extends SubsystemBase {
             .andThen(Commands.waitUntil(this::isExtensionWithinTolerance));
     }
 
+    /**
+     * Returns a command that recalibrates the position of the hanger and stows it. Run when the robot's mode changes.
+     * 
+     * @return Command to run
+     */
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPercentOutput(-0.05)),

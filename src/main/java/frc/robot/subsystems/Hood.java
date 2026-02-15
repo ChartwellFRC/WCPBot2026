@@ -18,6 +18,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 
+/**
+ * Hood subsystem controls the position of the robot's hood, which affects the trajectory of balls being shot.
+ */
 public class Hood extends SubsystemBase {
     private static final Distance kServoLength = Millimeters.of(100);
     private static final LinearVelocity kMaxServoSpeed = Millimeters.of(20).per(Second);

@@ -20,6 +20,10 @@ import frc.util.DriveInputSmoother;
 import frc.util.GeometryUtil;
 import frc.util.ManualDriveInput;
 
+/**
+ * Drive command that keeps the robot facing the hub while moving based on controller input.
+ * Used by SubsystemCommands.aimAndShoot().
+ */
 public class AimAndDriveCommand extends Command {
     private static final Angle kAimTolerance = Degrees.of(5);
 

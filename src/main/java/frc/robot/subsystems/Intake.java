@@ -32,7 +32,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KrakenX60;
 import frc.robot.Ports;
 
+/**
+ * Intake subsystem controls the robot's ball intake. The intake has a roller to suck up balls, and can also move up and down.
+ */
 public class Intake extends SubsystemBase {
+    // Values for roller speed
     public enum Speed {
         STOP(0),
         INTAKE(0.8);
@@ -48,6 +52,7 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    // Values for pivot position
     public enum Position {
         HOMED(110),
         STOWED(100),
@@ -162,6 +167,11 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    /**
+     * Returns a command that moves the intake and spins its roller to suck up balls.
+     * 
+     * @return Command to run
+     */
     public Command intakeCommand() {
         return startEnd(
             () -> {
@@ -172,6 +182,11 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    /**
+     * Returns a command that bounces the intake up and down, which helps balls get into the feeder.
+     * 
+     * @return Command to run
+     */
     public Command agitateCommand() {
         return runOnce(() -> set(Speed.INTAKE))
             .andThen(
@@ -189,6 +204,11 @@ public class Intake extends SubsystemBase {
             });
     }
 
+    /**
+     * Returns a command that recalibrates the position of the intake and stows it. Run when the robot's mode changes.
+     * 
+     * @return Command to run
+     */
     public Command homingCommand() {
         return Commands.sequence(
             runOnce(() -> setPivotPercentOutput(0.1)),

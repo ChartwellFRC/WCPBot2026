@@ -25,6 +25,9 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
+/**
+ * Contains routines for autonomous mode.
+ */
 public final class AutoRoutines {
     private final Swerve swerve;
     private final Intake intake;
@@ -71,6 +74,16 @@ public final class AutoRoutines {
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
 
+    /**
+     * Autonomous routine for Rebuilt:
+     *  1. Move to the outpost
+     *  2. Move to the depot and pick up balls
+     *  3. Move to the shooting position (in front of the hub)
+     *  4. Shoot balls for 5 seconds
+     *  5. Move to the tower and climb it
+     * 
+     * @return Routine to run
+     */
     private AutoRoutine outpostAndDepotRoutine() {
         final AutoRoutine routine = autoFactory.newRoutine("Outpost and Depot");
         final AutoTrajectory startToOutpost = OutpostAndDepotTrajectory$0.asAutoTraj(routine);

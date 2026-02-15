@@ -66,6 +66,11 @@ public class Floor extends SubsystemBase {
         );
     }
 
+    /**
+     * Returns a command that runs bottom roller to help the feeder. Used by SubsystemCommands.feed().
+     * 
+     * @return Command to run
+     */
     public Command feedCommand() {
         return startEnd(() -> set(Speed.FEED), () -> set(Speed.STOP));
     }

@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
+/**
+ * Limelight subsystem controls the robot's Limelight (computer vision). The Limelight will look for
+ * AprilTags around the field so the robot can accurately determine where it is. When the Limelight
+ * sees an AprilTag it calls Swerve.addVisionMeasurement to update the robot's pose.
+ */
 public class Limelight extends SubsystemBase {
     private final String name;
     private final NetworkTable telemetryTable;

@@ -91,20 +91,29 @@ public class RobotContainer {
         configureManualDriveBindings();
         limelight.setDefaultCommand(updateVisionCommand());
 
+        // Whenever the mode changes, perform homing on the intake and hanger.
+        // This ensures their motors are at known positions.
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
             .onTrue(intake.homingCommand())
             .onTrue(hanger.homingCommand());
 
+        // Right trigger: aim towards the hub and shoot balls (does not prevent driving!)
         driver.rightTrigger().whileTrue(subsystemCommands.aimAndShoot());
+        // Right bumper: shoot immediately without automatic aiming
         driver.rightBumper().whileTrue(subsystemCommands.shootManually());
+        // Left trigger: move the intake down and suck up balls
         driver.leftTrigger().whileTrue(intake.intakeCommand());
+        // Left bumper: stow the intake
         driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
 
+        // D-pad up and down: control the hanger for climbing the tower
         driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
         driver.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
     }
 
+    // More trigger->command mappings for manual driving.
     private void configureManualDriveBindings() {
+        // Move without rotating with the left stick, and rotate with the right stick.
         final ManualDriveCommand manualDriveCommand = new ManualDriveCommand(
             swerve, 
             () -> -driver.getLeftY(), 
@@ -112,13 +121,20 @@ public class RobotContainer {
             () -> -driver.getRightX()
         );
         swerve.setDefaultCommand(manualDriveCommand);
+        // A, B, X, Y buttons: face cardinal directions, relative to the alliance wall
         driver.a().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
         driver.b().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
         driver.x().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
         driver.y().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        // Back button: reset rotation so wherever the robot is facing becomes forward
         driver.back().onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));
     }
 
+    /**
+     * Returns a command that runs continuously to keep the robot's pose updated using measurements from the Limelight.
+     * 
+     * @return Command to run
+     */
     private Command updateVisionCommand() {
         return limelight.run(() -> {
             final Pose2d currentRobotPose = swerve.getState().Pose;

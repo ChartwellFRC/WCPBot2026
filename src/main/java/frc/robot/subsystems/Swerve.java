@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
+/**
+ * Drivetrain subsystem controls the robot's movement. It also keeps track of the robot's pose,
+ * so the robot knows where it is on the field.
+ */
 public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
