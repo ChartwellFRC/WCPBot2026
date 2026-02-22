@@ -75,6 +75,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         autoRoutines.configure();
+        limelight.setDefaultCommand(updateVisionCommand());
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
     }
     
@@ -89,26 +90,18 @@ public class RobotContainer {
      */
     private void configureBindings() {
         configureManualDriveBindings();
-        limelight.setDefaultCommand(updateVisionCommand());
+        // configureShootingBindings();
+        configureTestBindings();
+
+        // D-pad up and down: control the hanger for climbing the tower
+        driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        driver.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
 
         // Whenever the mode changes, perform homing on the intake and hanger.
         // This ensures their motors are at known positions.
         RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
             .onTrue(intake.homingCommand())
             .onTrue(hanger.homingCommand());
-
-        // Right trigger: aim towards the hub and shoot balls (does not prevent driving!)
-        driver.rightTrigger().whileTrue(subsystemCommands.aimAndShoot());
-        // Right bumper: shoot immediately without automatic aiming
-        driver.rightBumper().whileTrue(subsystemCommands.shootManually());
-        // Left trigger: move the intake down and suck up balls
-        driver.leftTrigger().whileTrue(intake.intakeCommand());
-        // Left bumper: stow the intake
-        driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
-
-        // D-pad up and down: control the hanger for climbing the tower
-        driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        driver.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
     }
 
     // More trigger->command mappings for manual driving.
@@ -128,6 +121,29 @@ public class RobotContainer {
         driver.y().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
         // Back button: reset rotation so wherever the robot is facing becomes forward
         driver.back().onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));
+    }
+
+    // Teleop bindings for shooting balls.
+    private void configureShootingBindings() {
+        // Right trigger: aim towards the hub and shoot balls (does not prevent driving!)
+        driver.rightTrigger().whileTrue(subsystemCommands.aimAndShoot());
+        // Right bumper: shoot immediately without automatic aiming
+        driver.rightBumper().whileTrue(subsystemCommands.shootManually());
+        // Left trigger: move the intake down and suck up balls
+        driver.leftTrigger().whileTrue(intake.intakeCommand());
+        // Left bumper: stow the intake
+        driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+    }
+    
+    // Teleop bindings for testing.
+    private void configureTestBindings() {
+        // Right trigger: if an AprilTag is visible, move the robot to be centered in front of it
+        driver.rightTrigger().whileTrue(new ManualDriveCommand(
+            swerve, 
+            () -> 0.0, 
+            () -> limelight.getTX() * -0.05, 
+            () -> 0.0
+        ));
     }
 
     /**

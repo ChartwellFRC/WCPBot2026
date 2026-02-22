@@ -30,6 +30,14 @@ public class Limelight extends SubsystemBase {
         this.posePublisher = telemetryTable.getStructTopic("Estimated Robot Pose", Pose2d.struct).publish();
     }
 
+    public double getTX() {
+        return LimelightHelpers.getTX(name);
+    }
+
+    public double getTY() {
+        return LimelightHelpers.getTY(name);
+    }
+
     public Optional<Measurement> getMeasurement(Pose2d currentRobotPose) {
         LimelightHelpers.SetRobotOrientation(name, currentRobotPose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
