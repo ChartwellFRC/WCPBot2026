@@ -59,6 +59,34 @@ public record ChoreoTraj(
 	    new Pose2d(2.498, 4.035, Rotation2d.fromRadians(0)),
 	    new Pose2d(0.941, 3.564, Rotation2d.fromRadians(3.142))
 	);
+	public static final ChoreoTraj DepotTrajectory = new ChoreoTraj(
+	    "DepotTrajectory",
+	    OptionalInt.empty(),
+	    8.18966,
+	    new Pose2d(3.598, 7.429, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(0.941, 3.564, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj DepotTrajectory$0 = new ChoreoTraj(
+	    "DepotTrajectory",
+	    OptionalInt.of(0),
+	    2.05175,
+	    new Pose2d(3.598, 7.429, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(0.668, 5.964, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj DepotTrajectory$1 = new ChoreoTraj(
+	    "DepotTrajectory",
+	    OptionalInt.of(1),
+	    2.5827999999999998,
+	    new Pose2d(0.668, 5.964, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(2.498, 4.035, Rotation2d.fromRadians(0))
+	);
+	public static final ChoreoTraj DepotTrajectory$2 = new ChoreoTraj(
+	    "DepotTrajectory",
+	    OptionalInt.of(2),
+	    3.55511,
+	    new Pose2d(2.498, 4.035, Rotation2d.fromRadians(0)),
+	    new Pose2d(0.941, 3.564, Rotation2d.fromRadians(3.142))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -69,7 +97,11 @@ public record ChoreoTraj(
 		Map.entry("OutpostAndDepotTrajectory$0", OutpostAndDepotTrajectory$0),
 		Map.entry("OutpostAndDepotTrajectory$1", OutpostAndDepotTrajectory$1),
 		Map.entry("OutpostAndDepotTrajectory$2", OutpostAndDepotTrajectory$2),
-		Map.entry("OutpostAndDepotTrajectory$3", OutpostAndDepotTrajectory$3)
+		Map.entry("OutpostAndDepotTrajectory$3", OutpostAndDepotTrajectory$3),
+		Map.entry("DepotTrajectory", DepotTrajectory),
+		Map.entry("DepotTrajectory$0", DepotTrajectory$0),
+		Map.entry("DepotTrajectory$1", DepotTrajectory$1),
+		Map.entry("DepotTrajectory$2", DepotTrajectory$2)
     );
 
     /**

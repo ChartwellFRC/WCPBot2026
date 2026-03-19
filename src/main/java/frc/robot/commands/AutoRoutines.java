@@ -8,6 +8,9 @@ import static frc.robot.generated.ChoreoTraj.OutpostAndDepotTrajectory$0;
 import static frc.robot.generated.ChoreoTraj.OutpostAndDepotTrajectory$1;
 import static frc.robot.generated.ChoreoTraj.OutpostAndDepotTrajectory$2;
 import static frc.robot.generated.ChoreoTraj.OutpostAndDepotTrajectory$3;
+import static frc.robot.generated.ChoreoTraj.DepotTrajectory$0;
+import static frc.robot.generated.ChoreoTraj.DepotTrajectory$1;
+import static frc.robot.generated.ChoreoTraj.DepotTrajectory$2;
 
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
@@ -69,13 +72,15 @@ public final class AutoRoutines {
     }
 
     public void configure() {
-        autoChooser.addRoutine("Outpost and Depot", this::outpostAndDepotRoutine);
+        autoChooser.addRoutine("Outpost and Depot (Right Side)", this::outpostAndDepotRoutine);
+        autoChooser.addRoutine("Depot (Left Side)", this::depotRoutine);
+        autoChooser.addRoutine("Aim and Shoot (No Move)", this::aimAndShootRoutine);
         SmartDashboard.putData("Auto Chooser", autoChooser);
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
     }
 
     /**
-     * Autonomous routine for Rebuilt:
+     * Autonomous routine for Rebuilt (outpost side):
      *  1. Move to the outpost
      *  2. Move to the depot and pick up balls
      *  3. Move to the shooting position (in front of the hub)
@@ -129,6 +134,80 @@ public final class AutoRoutines {
         shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
         shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
 
+        return routine;
+    }
+    
+    /**
+     * Autonomous routine for Rebuilt (depot side):
+     *  1. Move to the depot and pick up balls
+     *  2. Move to the shooting position (in front of the hub)
+     *  3. Shoot balls for 5 seconds
+     *  4. Move to the tower and climb it
+     * 
+     * @return Routine to run
+     */
+    private AutoRoutine depotRoutine() {
+        final AutoRoutine routine = autoFactory.newRoutine("Depot");
+        final AutoTrajectory startToDepot = DepotTrajectory$0.asAutoTraj(routine);
+        final AutoTrajectory depotToShootingPose = DepotTrajectory$1.asAutoTraj(routine);
+        final AutoTrajectory shootingPoseToTower = DepotTrajectory$2.asAutoTraj(routine);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                startToDepot.resetOdometry(),
+                startToDepot.cmd()
+            )
+        );
+
+        routine.observe(hanger::isHomed).onTrue(
+            Commands.sequence(
+                Commands.waitSeconds(0.5),
+                intake.runOnce(() -> intake.set(Intake.Position.INTAKE))
+            )
+        );
+
+        startToDepot.atTimeBeforeEnd(1).onTrue(intake.intakeCommand());
+        startToDepot.doneDelayed(0.1).onTrue(depotToShootingPose.cmd());
+
+        depotToShootingPose.active().whileTrue(limelight.idle());
+        depotToShootingPose.atTime(0.5).onTrue(
+            Commands.parallel(
+                shooter.spinUpCommand(2600),
+                hood.positionCommand(0.32)
+            )
+        );
+        depotToShootingPose.done().onTrue(
+            Commands.sequence(
+                subsystemCommands.aimAndShoot()
+                    .withTimeout(5),
+                shootingPoseToTower.cmd()
+            )
+        );
+
+        shootingPoseToTower.active().whileTrue(limelight.idle());
+        shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+
+        return routine;
+    }
+    
+    /**
+     * Autonomous routine for Rebuilt (no movement):
+     *  1. Aim towards the hub and shoot balls for 5 seconds
+     * 
+     * @return Routine to run
+     */
+    private AutoRoutine aimAndShootRoutine() {
+        final AutoRoutine routine = autoFactory.newRoutine("Aim and Shoot");
+        routine.active().onTrue(
+            Commands.sequence(
+                Commands.parallel(
+                    shooter.spinUpCommand(2600),
+                    hood.positionCommand(0.32)
+                ).withTimeout(0.5),
+                subsystemCommands.aimAndShoot().withTimeout(5)
+            )
+        );
         return routine;
     }
 }
