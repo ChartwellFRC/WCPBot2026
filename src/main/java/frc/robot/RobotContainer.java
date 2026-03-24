@@ -39,7 +39,7 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve();
     private final Intake intake = new Intake();
     // private final Floor floor = new Floor();
-    // private final Feeder feeder = new Feeder();
+    private final Feeder feeder = new Feeder();
     // private final Shooter shooter = new Shooter();
     // private final Hood hood = new Hood();
     private final Hanger hanger = new Hanger();
@@ -90,7 +90,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         configureManualDriveBindings();
-        // configureShootingBindings();
+        configureShootingBindings();
         configureTestBindings();
 
         // D-pad up and down: control the hanger for climbing the tower
@@ -99,9 +99,9 @@ public class RobotContainer {
 
         // Whenever the mode changes, perform homing on the intake and hanger.
         // This ensures their motors are at known positions.
-        RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-            .onTrue(intake.homingCommand())
-            .onTrue(hanger.homingCommand());
+        // RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
+        //     .onTrue(intake.homingCommand())
+        //     .onTrue(hanger.homingCommand());
     }
 
     // More trigger->command mappings for manual driving.
@@ -130,9 +130,9 @@ public class RobotContainer {
         // Right bumper: shoot immediately without automatic aiming
         // driver.rightBumper().whileTrue(subsystemCommands.shootManually());
         // Left trigger: move the intake down and suck up balls
-        // driver.leftTrigger().whileTrue(intake.intakeCommand());
+        driver.leftTrigger().whileTrue(intake.intakeCommand());
         // Left bumper: stow the intake
-        // driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
     }
     
     // Teleop bindings for testing.

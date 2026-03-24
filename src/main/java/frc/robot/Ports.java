@@ -8,9 +8,9 @@ public final class Ports {
     public static final CANBus kCANivoreCANBus = new CANBus("main");
 
     // Talon FX IDs
-    public static final int kIntakePivot = 10;
-    public static final int kIntakeRollers = 11;
-    public static final int kFloor = 12;
+    public static final int kIntakePivot = 52;
+    public static final int kIntakeRollers = 50 ;
+    public static final int kFloor = 53;
     public static final int kFeeder = 13;
     public static final int kShooterLeft = 14;
     public static final int kShooterMiddle = 15;
