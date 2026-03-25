@@ -33,7 +33,7 @@ import frc.robot.subsystems.Swerve;
  */
 public final class AutoRoutines {
     private final Swerve swerve;
-    private final Intake intake;
+    // private final Intake intake;
     private final Floor floor;
     private final Feeder feeder;
     private final Shooter shooter;
@@ -48,7 +48,7 @@ public final class AutoRoutines {
 
     public AutoRoutines(
         Swerve swerve,
-        Intake intake,
+        // Intake intake,
         Floor floor,
         Feeder feeder,
         Shooter shooter,
@@ -57,7 +57,7 @@ public final class AutoRoutines {
         Limelight limelight
     ) {
         this.swerve = swerve;
-        this.intake = intake;
+        // this.intake = intake;
         this.floor = floor;
         this.feeder = feeder;
         this.shooter = shooter;
@@ -65,7 +65,7 @@ public final class AutoRoutines {
         this.hanger = hanger;
         this.limelight = limelight;
 
-        this.subsystemCommands = new SubsystemCommands(swerve, intake, floor, feeder, shooter, hood, hanger);
+        this.subsystemCommands = new SubsystemCommands(swerve, /*intake,*/ floor, feeder, shooter, hood, hanger);
 
         this.autoFactory = swerve.createAutoFactory();
         this.autoChooser = new AutoChooser();
@@ -103,16 +103,16 @@ public final class AutoRoutines {
             )
         );
 
-        routine.observe(hanger::isHomed).onTrue(
-            Commands.sequence(
-                Commands.waitSeconds(0.5),
-                intake.runOnce(() -> intake.set(Intake.Position.INTAKE))
-            )
-        );
+        // routine.observe(hanger::isHomed).onTrue(
+        //     Commands.sequence(
+        //         Commands.waitSeconds(0.5),
+        //         intake.runOnce(() -> intake.set(Intake.Position.INTAKE))
+        //     )
+        // );
 
         startToOutpost.doneDelayed(1).onTrue(outpostToDepot.cmd());
 
-        outpostToDepot.atTimeBeforeEnd(1).onTrue(intake.intakeCommand());
+        // outpostToDepot.atTimeBeforeEnd(1).onTrue(intake.intakeCommand());
         outpostToDepot.doneDelayed(0.1).onTrue(depotToShootingPose.cmd());
 
         depotToShootingPose.active().whileTrue(limelight.idle());
@@ -159,14 +159,14 @@ public final class AutoRoutines {
             )
         );
 
-        routine.observe(hanger::isHomed).onTrue(
-            Commands.sequence(
-                Commands.waitSeconds(0.5),
-                intake.runOnce(() -> intake.set(Intake.Position.INTAKE))
-            )
-        );
+        // routine.observe(hanger::isHomed).onTrue(
+        //     Commands.sequence(
+        //         Commands.waitSeconds(0.5),
+        //         intake.runOnce(() -> intake.set(Intake.Position.INTAKE))
+        //     )
+        // );
 
-        startToDepot.atTimeBeforeEnd(1).onTrue(intake.intakeCommand());
+        // startToDepot.atTimeBeforeEnd(1).onTrue(intake.intakeCommand());
         startToDepot.doneDelayed(0.1).onTrue(depotToShootingPose.cmd());
 
         depotToShootingPose.active().whileTrue(limelight.idle());
