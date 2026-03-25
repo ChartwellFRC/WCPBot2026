@@ -38,11 +38,11 @@ import frc.util.SwerveTelemetry;
 public class RobotContainer {
     private final Swerve swerve = new Swerve();
     private final Intake intake = new Intake();
-    // private final Floor floor = new Floor();
-    private final Feeder feeder = new Feeder();
+    private final Floor floor = new Floor();
+    //private final Feeder feeder = new Feeder();
     // private final Shooter shooter = new Shooter();
     // private final Hood hood = new Hood();
-    private final Hanger hanger = new Hanger();
+    //private final Hanger hanger = new Hanger();
     // private final Limelight limelight = new Limelight("limelight");
 
     private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(Driving.kMaxSpeed.in(MetersPerSecond));
@@ -94,8 +94,8 @@ public class RobotContainer {
         configureTestBindings();
 
         // D-pad up and down: control the hanger for climbing the tower
-        driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        driver.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+        // driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        // driver.povDown().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
 
         // Whenever the mode changes, perform homing on the intake and hanger.
         // This ensures their motors are at known positions.
