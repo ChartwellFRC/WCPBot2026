@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Driving;
 import frc.robot.subsystems.Swerve;
@@ -30,7 +31,8 @@ public class ManualDriveCommand extends Command {
     private enum State {
         IDLING,
         DRIVING_WITH_MANUAL_ROTATION,
-        DRIVING_WITH_LOCKED_HEADING
+        DRIVING_WITH_LOCKED_HEADING,
+        DRIVING_ROBOT_CENTRIC
     }
 
     private static final Time kHeadingLockDelay = Seconds.of(0.25); // time to wait before locking heading
@@ -51,6 +53,10 @@ public class ManualDriveCommand extends Command {
         .withSteerRequestType(SteerRequestType.MotionMagicExpo)
         .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
         .withHeadingPID(5, 0, 0);
+
+    private final SwerveRequest.RobotCentric robotCentricRequest = new SwerveRequest.RobotCentric()
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+        .withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
     private State currentState = State.IDLING;
     private Optional<Rotation2d> lockedHeading = Optional.empty();
@@ -114,6 +120,9 @@ public class ManualDriveCommand extends Command {
         } else if (previousInput.hasRotation() || previousInput.hasTranslation()) {
             currentState = State.IDLING;
         }
+        if (SmartDashboard.getBoolean("DriveRobotCentric", false) && currentState != State.IDLING) {
+            currentState = State.DRIVING_ROBOT_CENTRIC;
+        }
         previousInput = input;
 
         switch (currentState) {
@@ -135,6 +144,14 @@ public class ManualDriveCommand extends Command {
                         .withVelocityX(Driving.kMaxSpeed.times(input.forward))
                         .withVelocityY(Driving.kMaxSpeed.times(input.left))
                         .withTargetDirection(lockedHeading.get())
+                );
+                break;
+            case DRIVING_ROBOT_CENTRIC:
+                swerve.setControl(
+                    robotCentricRequest
+                        .withVelocityX(Driving.kMaxSpeed.times(input.forward))
+                        .withVelocityY(Driving.kMaxSpeed.times(input.left))
+                        .withRotationalRate(Driving.kMaxRotationalRate.times(input.rotation))
                 );
                 break;
         }
