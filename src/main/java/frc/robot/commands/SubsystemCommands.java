@@ -17,12 +17,12 @@ import frc.robot.subsystems.Swerve;
  */
 public final class SubsystemCommands {
     private final Swerve swerve;
-    // private final Intake intake;
+    private final Intake intake;
     private final Floor floor;
     private final Feeder feeder;
     private final Shooter shooter;
     private final Hood hood;
-    private final Hanger hanger;
+    // private final Hanger hanger;
 
     // Controller inputs when in teleop mode, zero when in autonomous mode.
     private final DoubleSupplier forwardInput;
@@ -31,22 +31,22 @@ public final class SubsystemCommands {
     // Constructor for teleop mode
     public SubsystemCommands(
         Swerve swerve,
-        // Intake intake,
+        Intake intake,
         Floor floor,
         Feeder feeder,
         Shooter shooter,
         Hood hood,
-        Hanger hanger,
+        // Hanger hanger,
         DoubleSupplier forwardInput,
         DoubleSupplier leftInput
     ) {
         this.swerve = swerve;
-        // this.intake = intake;
+        this.intake = intake;
         this.floor = floor;
         this.feeder = feeder;
         this.shooter = shooter;
         this.hood = hood;
-        this.hanger = hanger;
+        // this.hanger = hanger;
 
         this.forwardInput = forwardInput;
         this.leftInput = leftInput;
@@ -55,21 +55,21 @@ public final class SubsystemCommands {
     // Constructor for autonomous mode
     public SubsystemCommands(
         Swerve swerve,
-        // Intake intake,
+        Intake intake,
         Floor floor,
         Feeder feeder,
         Shooter shooter,
-        Hood hood,
-        Hanger hanger
+        Hood hood
+        // Hanger hanger
     ) {
         this(
             swerve,
-            // intake,
+            intake,
             floor,
             feeder,
             shooter,
             hood,
-            hanger,
+            // hanger,
             () -> 0,
             () -> 0
         );
@@ -115,7 +115,7 @@ public final class SubsystemCommands {
             Commands.parallel(
                 feeder.feedCommand(),
                 Commands.waitSeconds(0.125)
-                    .andThen(floor.feedCommand()/*.alongWith(intake.agitateCommand())*/)
+                    .andThen(floor.feedCommand().alongWith(intake.agitateCommand()))
             )
         );
     }

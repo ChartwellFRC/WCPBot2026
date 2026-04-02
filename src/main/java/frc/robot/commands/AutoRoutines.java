@@ -33,12 +33,12 @@ import frc.robot.subsystems.Swerve;
  */
 public final class AutoRoutines {
     private final Swerve swerve;
-    // private final Intake intake;
+    private final Intake intake;
     private final Floor floor;
     private final Feeder feeder;
     private final Shooter shooter;
     private final Hood hood;
-    private final Hanger hanger;
+    // private final Hanger hanger;
     private final Limelight limelight;
 
     private final SubsystemCommands subsystemCommands;
@@ -48,24 +48,24 @@ public final class AutoRoutines {
 
     public AutoRoutines(
         Swerve swerve,
-        // Intake intake,
+        Intake intake,
         Floor floor,
         Feeder feeder,
         Shooter shooter,
         Hood hood,
-        Hanger hanger,
+        // Hanger hanger,
         Limelight limelight
     ) {
         this.swerve = swerve;
-        // this.intake = intake;
+        this.intake = intake;
         this.floor = floor;
         this.feeder = feeder;
         this.shooter = shooter;
         this.hood = hood;
-        this.hanger = hanger;
+        // this.hanger = hanger;
         this.limelight = limelight;
 
-        this.subsystemCommands = new SubsystemCommands(swerve, /*intake,*/ floor, feeder, shooter, hood, hanger);
+        this.subsystemCommands = new SubsystemCommands(swerve, intake, floor, feeder, shooter, hood /*, hanger*/);
 
         this.autoFactory = swerve.createAutoFactory();
         this.autoChooser = new AutoChooser();
@@ -131,8 +131,8 @@ public final class AutoRoutines {
         );
 
         shootingPoseToTower.active().whileTrue(limelight.idle());
-        shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+        // shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        // shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
 
         return routine;
     }
@@ -185,8 +185,8 @@ public final class AutoRoutines {
         );
 
         shootingPoseToTower.active().whileTrue(limelight.idle());
-        shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
-        shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
+        // shootingPoseToTower.active().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
+        // shootingPoseToTower.done().onTrue(hanger.positionCommand(Hanger.Position.HUNG));
 
         return routine;
     }
