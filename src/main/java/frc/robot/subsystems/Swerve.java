@@ -17,6 +17,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
@@ -120,6 +121,11 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+        // SmartDashboard.putNumber("0 Offset", super.getModule(0).getPosition(false).angle.getDegrees());        SmartDashboard.putNumber("FR Offset", super.getModule(0).getPosition(false).angle.getDegrees());
+        // SmartDashboard.putNumber("1 Offset", super.getModule(1).getPosition(false).angle.getDegrees());
+        // SmartDashboard.putNumber("2 Offset", super.getModule(2).getPosition(false).angle.getDegrees());
+        // SmartDashboard.putNumber("3 Offset", super.getModule(3).getPosition(false).angle.getDegrees());
+
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.

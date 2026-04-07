@@ -167,18 +167,25 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    private Command deployCommand() {
+        return startEnd(() -> set(Position.INTAKE), () -> pivotMotor.stopMotor()).onlyWhile(() -> pivotMotor.getSupplyCurrent().getValue().in(Amps) < 6);
+    }
+
     /**
      * Returns a command that moves the intake and spins its roller to suck up balls.
      * 
      * @return Command to run
      */
     public Command intakeCommand() {
-        return startEnd(
-            () -> {
-                set(Position.INTAKE);
-                set(Speed.INTAKE);
-            },
-            () -> set(Speed.STOP)
+        return Commands.parallel(
+            startEnd(
+                () -> {
+                    // set(Position.INTAKE);
+                    set(Speed.INTAKE);
+                },
+                () -> set(Speed.STOP)
+            ),
+            deployCommand()
         );
     }
 

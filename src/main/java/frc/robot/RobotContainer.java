@@ -38,45 +38,45 @@ import frc.util.SwerveTelemetry;
  */
 public class RobotContainer {
     private final Swerve swerve = new Swerve();
-    private final Intake intake = new Intake();
-    private final Floor floor = new Floor();
-    private final Feeder feeder = new Feeder();
-    private final Shooter shooter = new Shooter();
-    private final Hood hood = new Hood();
+    // private final Intake intake = new Intake();
+    // private final Floor floor = new Floor();
+    // private final Feeder feeder = new Feeder();
+    // private final Shooter shooter = new Shooter();
+    // private final Hood hood = new Hood();
     // private final Hanger hanger = new Hanger();
-    private final Limelight limelight = new Limelight("limelight");
+    // private final Limelight limelight = new Limelight("limelight");
 
     private final SwerveTelemetry swerveTelemetry = new SwerveTelemetry(Driving.kMaxSpeed.in(MetersPerSecond));
     
     private final CommandXboxController driver = new CommandXboxController(0);
 
-    private final AutoRoutines autoRoutines = new AutoRoutines(
-        swerve,
-        intake,
-        floor,
-        feeder,
-        shooter,
-        hood,
-        // hanger,
-        limelight
-    );
-    private final SubsystemCommands subsystemCommands = new SubsystemCommands(
-        swerve,
-        intake,
-        floor,
-        feeder,
-        shooter,
-        hood,
-        // hanger,
-        () -> -driver.getLeftY(),
-        () -> -driver.getLeftX()
-    );
+    // private final AutoRoutines autoRoutines = new AutoRoutines(
+    //     swerve,
+    //     intake,
+    //     floor,
+    //     feeder,
+    //     shooter,
+    //     hood
+    //     // hanger,
+    //     limelight
+    // );
+    // private final SubsystemCommands subsystemCommands = new SubsystemCommands(
+    //     swerve,
+    //     // intake,
+    //     floor,
+    //     feeder,
+    //     shooter,
+    //     hood,
+    //     // hanger,
+    //     () -> -driver.getLeftY(),
+    //     () -> -driver.getLeftX()
+    // );
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         configureBindings();
-        autoRoutines.configure();
-        limelight.setDefaultCommand(updateVisionCommand());
+        // autoRoutines.configure();
+        // limelight.setDefaultCommand(updateVisionCommand());
         swerve.registerTelemetry(swerveTelemetry::telemeterize);
         SmartDashboard.putBoolean("DriveRobotCentric", false);
     }
@@ -93,7 +93,7 @@ public class RobotContainer {
     private void configureBindings() {
         configureManualDriveBindings();
         configureShootingBindings();
-        configureTestBindings();
+        // configureTestBindings();
 
         // D-pad up and down: control the hanger for climbing the tower
         // driver.povUp().onTrue(hanger.positionCommand(Hanger.Position.HANGING));
@@ -101,8 +101,8 @@ public class RobotContainer {
 
         // Whenever the mode changes, perform homing on the intake and hanger.
         // This ensures their motors are at known positions.
-        RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
-            .onTrue(intake.homingCommand());
+        // RobotModeTriggers.autonomous().or(RobotModeTriggers.teleop())
+        //     .onTrue(intake.homingCommand());
             // .onTrue(hanger.homingCommand());
     }
 
@@ -117,10 +117,10 @@ public class RobotContainer {
         );
         swerve.setDefaultCommand(manualDriveCommand);
         // A, B, X, Y buttons: face cardinal directions, relative to the alliance wall
-        // driver.a().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
-        // driver.b().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
-        // driver.x().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
-        // driver.y().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
+        driver.a().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.k180deg)));
+        driver.b().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCW_90deg)));
+        driver.x().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kCCW_90deg)));
+        driver.y().onTrue(Commands.runOnce(() -> manualDriveCommand.setLockedHeading(Rotation2d.kZero)));
         // Back button: reset rotation so wherever the robot is facing becomes forward
         driver.back().onTrue(Commands.runOnce(() -> manualDriveCommand.seedFieldCentric()));
     }
@@ -130,42 +130,42 @@ public class RobotContainer {
         // Right trigger: aim towards the hub and shoot balls (does not prevent driving!)
         // driver.rightTrigger().whileTrue(subsystemCommands.aimAndShoot());
         // Right bumper: shoot immediately without automatic aiming
-        driver.rightBumper().whileTrue(subsystemCommands.shootManually());
+        // driver.rightBumper().whileTrue(subsystemCommands.shootManually());
         // Left trigger: move the intake down and suck up balls
-        driver.leftTrigger().whileTrue(intake.intakeCommand());
+        // driver.leftTrigger().whileTrue(intake.intakeCommand());
         // Left bumper: stow the intake
-        driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
+        // driver.leftBumper().onTrue(intake.runOnce(() -> intake.set(Intake.Position.STOWED)));
     }
     
     // Teleop bindings for testing.
-    private void configureTestBindings() {
-        // A button: test the floor
-        driver.a().whileTrue(floor.feedCommand());
-        // B button: test the feeder
-        driver.b().whileTrue(feeder.feedCommand());
-        // X button: test the shooter
-        driver.x().whileTrue(shooter.dashboardSpinUpCommand());
-        // Y button: test the hood
-        driver.x().whileTrue(hood.positionCommand(1.0));
-    }
+    // private void configureTestBindings() {
+    //     // A button: test the floor
+    //     driver.a().whileTrue(floor.feedCommand());
+    //     // B button: test the feeder
+    //     driver.b().whileTrue(feeder.feedCommand());
+    //     // X button: test the shooter
+    //     driver.x().whileTrue(shooter.dashboardSpinUpCommand());
+    //     // Y button: test the hood
+    //     driver.y().whileTrue(hood.positionCommand(1.0));
+    // }
 
     /**
      * Returns a command that runs continuously to keep the robot's pose updated using measurements from the Limelight.
      * 
      * @return Command to run
      */
-    private Command updateVisionCommand() {
-        return limelight.run(() -> {
-            final Pose2d currentRobotPose = swerve.getState().Pose;
-            final Optional<Limelight.Measurement> measurement = limelight.getMeasurement(currentRobotPose);
-            measurement.ifPresent(m -> {
-                swerve.addVisionMeasurement(
-                    m.poseEstimate.pose, 
-                    m.poseEstimate.timestampSeconds,
-                    m.standardDeviations
-                );
-            });
-        })
-        .ignoringDisable(true);
-    }
+    // private Command updateVisionCommand() {
+    //     return limelight.run(() -> {
+    //         final Pose2d currentRobotPose = swerve.getState().Pose;
+    //         final Optional<Limelight.Measurement> measurement = limelight.getMeasurement(currentRobotPose);
+    //         measurement.ifPresent(m -> {
+    //             swerve.addVisionMeasurement(
+    //                 m.poseEstimate.pose, 
+    //                 m.poseEstimate.timestampSeconds,
+    //                 m.standardDeviations
+    //             );
+    //         });
+    //     })
+    //     .ignoringDisable(true);
+    // }
 }
